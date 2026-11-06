@@ -47,6 +47,10 @@ venv.bak/
 *.swp
 *.swo
 
+# MS Office temporary files
+~$*
+*.tmp
+
 # OS generated files
 .DS_Store
 Thumbs.db
@@ -55,3 +59,4 @@ Desktop.ini
 # Scratch temporary files
 scratch/
 scratch_*
+

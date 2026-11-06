@@ -147,7 +147,31 @@ $$P_{224}(t) = P_{474}(t) + P_{476}(t) + P_{478}(t) + P_{480}(t)$$
 
 > *Ghi chú: Kết quả sử dụng Ensemble trung bình của 3 mô hình khởi tạo độc lập (Seeds: 42, 123, 999). Ở mốc 30 phút, độ lệch chuẩn giữa các seed đạt mức lý tưởng $\pm 0.04\%$.*
 
-### 4.2. Đánh giá cắt lớp thành phần (Ablation Study)
+### 4.2. Đối chuẩn với các mô hình học sâu kinh điển & SOTA (Deep Baselines Benchmark)
+
+Khảo sát đối chứng trên **72 kịch bản thực nghiệm độc lập** (6 dòng kiến trúc học sâu × 2 biến thể BASE/TOPO × 6 khoảng dự báo) trên cùng tập kiểm thử 10.335 mẫu năm 2025:
+
+| Kiến trúc | Biến thể | 1P (30p) | 2P (1h) | 6P (3h) | 12P (6h) | 24P (12h) | 48P (24h) | **WAPE TB** | **MAE TB** | **Hệ số $R^2$** | Số tham số | Tốc độ suy luận |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **MLP** | BASE | 8.95% | 10.54% | 12.76% | 14.27% | 16.44% | 16.92% | **13.31%** | 2.69 | 0.8157 | 202.3 K | 0.026 ms |
+| **MLP** | TOPO | 7.19% | 8.14% | 10.44% | 12.90% | 14.28% | 15.43% | **11.40%** | 2.31 | 0.8569 | 229.8 K | 0.025 ms |
+| **LSTM** | BASE | 9.08% | 11.47% | 12.91% | 14.63% | 19.55% | 19.61% | **14.54%** | 2.94 | 0.7867 | 79.2 K | 0.029 ms |
+| **LSTM** | TOPO | 7.31% | 8.86% | 12.99% | 17.09% | 18.14% | 19.30% | **13.95%** | 2.82 | 0.7899 | 83.2 K | 0.031 ms |
+| **CNN** | BASE | 9.48% | 10.85% | 14.64% | 16.50% | 20.68% | 20.10% | **15.38%** | 3.11 | 0.7610 | 39.7 K | 0.028 ms |
+| **CNN** | TOPO | 7.01% | 8.24% | 11.69% | 15.88% | 18.10% | 19.05% | **13.33%** | 2.70 | 0.7988 | 43.4 K | 0.028 ms |
+| **GRU** | BASE | 9.16% | 9.69% | 12.35% | 16.10% | 19.64% | 19.46% | **14.40%** | 2.91 | 0.7849 | 64.9 K | 0.029 ms |
+| **GRU** | TOPO | 6.90% | 8.30% | 13.05% | 16.21% | 18.15% | 17.88% | **13.42%** | 2.71 | 0.8066 | 68.6 K | 0.029 ms |
+| **TCN** | BASE | 9.15% | 9.55% | 11.80% | 14.04% | 15.69% | 16.44% | **12.78%** | 2.59 | 0.8276 | 39.7 K | 0.029 ms |
+| **TCN** | TOPO | 6.98% | 8.23% | 11.80% | 13.29% | 15.24% | 16.57% | **12.02%** | 2.43 | 0.8419 | 43.4 K | 0.029 ms |
+| **iTransformer** | BASE | 9.30% | 10.23% | 11.91% | 14.23% | 17.63% | 17.91% | **13.54%** | 2.74 | 0.8076 | 206.7 K | 0.036 ms |
+| **iTransformer** | TOPO | 6.86% | 8.11% | 10.85% | 14.45% | 14.89% | 18.30% | **12.24%** | 2.48 | 0.8299 | 226.0 K | 0.036 ms |
+| **ST-TopoKAN** | **Đề xuất** | **6.20%** | **7.29%** | **9.69%** | **10.86%** | **12.73%** | **13.86%** | **10.10%** | **2.04** | **0.8788** | 358.4 K | **0.080 ms** |
+
+> **2 Đúc kết thực nghiệm then chốt:**
+> - **Tính phổ quát của cơ chế Tô-pô**: Khi tích hợp Bộ mã hóa đồ thị thưa `SparseTopologyEncoder` (Top-$K$, $k=4$), **100% tất cả 6 kiến trúc học sâu đều giảm sai số** (WAPE cải thiện từ -0.59% đến -2.05%). Điều này khẳng định tương quan không gian liên xuất tuyến là quy luật vật lý khách quan trong cấu trúc vận hành trạm biến áp.
+> - **Ưu thế tuyệt đối của ST-TopoKAN**: ST-TopoKAN dẫn đầu trên **cả 6/6 khoảng dự báo**, đạt WAPE trung bình **10.10%**, vượt qua mô hình BASE tốt nhất (12.78%), mô hình TOPO tốt nhất (11.40%) và vượt qua cả kiến trúc SOTA Inverted Transformer (12.24%) trong khi thời gian suy luận chỉ mất **0.080 ms**.
+
+### 4.3. Đánh giá cắt lớp thành phần (Ablation Study)
 
 Nghiên cứu cắt lớp trên toàn bộ 6 mốc thời gian khẳng định tính tất yếu của từng cơ chế:
 
@@ -186,8 +210,9 @@ ST-TopoKAN-PowerGrid/
 │   └── BaoCao_ST_TopoKAN.docx
 ├── presentation/                 # Slide báo cáo thuyết trình chính thức (.pptx)
 │   └── ST_TopoKAN.pptx
-├── notebooks/                    # 4 tệp Jupyter Notebook gốc (Giữ nguyên toàn bộ mã nguồn & output)
+├── notebooks/                    # 5 tệp Jupyter Notebook thực nghiệm (Giữ nguyên toàn bộ mã nguồn & output)
 │   ├── ST_TopoKAN.ipynb          # Huấn luyện mô hình ST-TopoKAN, MS-KAN, đánh giá 6 horizons
+│   ├── deepbase&deeptopo.ipynb   # Đối chuẩn 6 kiến trúc Deep Learning (BASE vs TOPO) qua 6 horizons
 │   ├── Xu_ly_01.ipynb            # Tiền xử lý tầng 1: Làm sạch dữ liệu vật lý SCADA
 │   ├── Xu_ly_02.ipynb            # Tiền xử lý tầng 2: Lấy mẫu chu kỳ 30 phút, đồng bộ thời gian
 │   └── Xu_ly_03.ipynb            # Tiền xử lý tầng 3: Ghép dữ liệu thời tiết & sinh đặc trưng
