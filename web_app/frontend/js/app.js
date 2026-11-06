@@ -302,8 +302,7 @@ const App = {
             <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-[#003b7a] border border-slate-200">${f.code}</span>
             <span class="text-xs font-mono text-slate-500">${f.current_a} A</span>
           </div>
-          <div class="text-xs font-bold text-slate-800 truncate">${f.name}</div>
-          <div class="text-[11px] text-slate-500 mb-2 truncate">${f.category}</div>
+          <div class="text-xs font-bold text-slate-800 truncate mb-2">${f.name}</div>
           
           <div class="flex items-baseline justify-between mb-1">
             <span class="text-lg font-bold font-mono text-slate-900">${f.p_mw.toFixed(2)} <span class="text-xs font-normal text-slate-500">MW</span></span>

@@ -101,19 +101,19 @@ class ScadaFlowVisualizer {
     const feederEndX = w * 0.88;
 
     const feederYPositions = [
-      h * 0.16, // Feeder 474 (Công nghiệp)
-      h * 0.38, // Feeder 476 (Dân sinh)
-      h * 0.62, // Feeder 478 (Điện mặt trời)
-      h * 0.84  // Feeder 480 (Nông nghiệp)
+      h * 0.16, // Feeder 474
+      h * 0.38, // Feeder 476
+      h * 0.62, // Feeder 478
+      h * 0.84  // Feeder 480
     ];
 
     let loadFactor = 0.5;
     let p224 = 20.24;
     let feeders = [
-      { p: 7.47, color: '#005baa', code: 'MC-474', name: 'Công nghiệp' },
-      { p: 2.74, color: '#1e40af', code: 'MC-476', name: 'Dân sinh' },
-      { p: 2.32, color: '#d97706', code: 'MC-478', name: 'Điện mặt trời' },
-      { p: 7.71, color: '#15803d', code: 'MC-480', name: 'Nông nghiệp' }
+      { p: 7.47, color: '#005baa', code: 'MC-474', name: '474' },
+      { p: 2.74, color: '#1e40af', code: 'MC-476', name: '476' },
+      { p: 2.32, color: '#d97706', code: 'MC-478', name: '478' },
+      { p: 7.71, color: '#15803d', code: 'MC-480', name: '480' }
     ];
 
     if (this.telemetry && this.telemetry.transformer_224) {

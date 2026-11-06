@@ -60,11 +60,11 @@ class DuckCurveService:
             "avg_temperature_c": temp,
             "ramp_rates_mw_per_h": ramp_rates,
             "duck_curve_highlights": {
-                "solar_belly_hour": "11:00 - 13:00 (Bụng vịt - Tải trạm suy giảm do điện mặt trời phát)",
-                "evening_peak_hour": "18:00 - 20:00 (Đầu vịt - Đỉnh tải sinh hoạt buổi tối)",
+                "solar_belly_hour": "11:00 - 13:00 (Bụng vịt - Tải trạm suy giảm sâu)",
+                "evening_peak_hour": "18:00 - 20:00 (Đầu vịt - Đỉnh phụ tải buổi tối)",
                 "max_ramp_time": f"{max_ramp_idx:02d}:00 -> {max_ramp_idx+1:02d}:00",
                 "max_ramp_speed_mw_h": max_ramp_val,
-                "analysis": "Tại Tây Ninh, xuất tuyến 478 tập trung nhiều điện mặt trời áp mái. Khi nắng đạt đỉnh lúc 12:00, lượng phát điện tại chỗ giảm nhu cầu nhận điện từ trạm 110kV. Ngay khi mặt trời lặn (17:30 - 19:00), công suất trạm phải tăng vọt ~12-15 MW chỉ trong 2 giờ để bù đắp, đòi hỏi mô hình dự báo như ST-TopoKAN phải có khả năng dự đoán chính xác cả độ sâu bụng vịt và độ dốc cổ vịt."
+                "analysis": "Tại khu vực trạm Tân Hưng (Tây Ninh), xuất tuyến 478 ghi nhận mức suy giảm phụ tải rõ rệt vào khung giờ trưa (11:00 - 13:00). Ngay sau đó vào chiều tối (17:30 - 19:00), công suất trạm tăng vọt ~12-15 MW chỉ trong 2 giờ để đáp ứng phụ tải, tạo thành hình thái Duck Curve đặc trưng. Điều này đòi hỏi mô hình dự báo như ST-TopoKAN phải có khả năng dự đoán chính xác cả độ sâu đáy tải và tốc độ dốc tải."
             }
         }
 

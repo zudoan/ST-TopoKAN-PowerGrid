@@ -31,7 +31,7 @@ const ChartManager = {
         extraCssText: 'box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);'
       },
       legend: {
-        data: ['P_224 (Tổng)', 'MC-474 (KCN)', 'MC-476 (Dân sinh)', 'MC-478 (Solar)', 'MC-480 (Nông nghiệp)', 'Nhiệt độ (°C)'],
+        data: ['P_224 (Tổng)', 'MC-474', 'MC-476', 'MC-478', 'MC-480', 'Nhiệt độ (°C)'],
         top: 6,
         textStyle: { color: '#334155', fontSize: 11, fontFamily: 'Inter' }
       },
@@ -82,7 +82,7 @@ const ChartManager = {
           }
         },
         {
-          name: 'MC-474 (KCN)',
+          name: 'MC-474',
           type: 'line',
           smooth: true,
           data: seriesData.series.P_474,
@@ -90,7 +90,7 @@ const ChartManager = {
           itemStyle: { color: '#1e40af' }
         },
         {
-          name: 'MC-476 (Dân sinh)',
+          name: 'MC-476',
           type: 'line',
           smooth: true,
           data: seriesData.series.P_476,
@@ -98,7 +98,7 @@ const ChartManager = {
           itemStyle: { color: '#0284c7' }
         },
         {
-          name: 'MC-478 (Solar)',
+          name: 'MC-478',
           type: 'line',
           smooth: true,
           data: seriesData.series.P_478,
@@ -106,7 +106,7 @@ const ChartManager = {
           itemStyle: { color: '#d97706' }
         },
         {
-          name: 'MC-480 (Nông nghiệp)',
+          name: 'MC-480',
           type: 'line',
           smooth: true,
           data: seriesData.series.P_480,
@@ -255,7 +255,7 @@ const ChartManager = {
         extraCssText: 'box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);'
       },
       legend: {
-        data: ['Phụ tải MBA 224 (Duck Curve)', 'Xuất tuyến 478 (Rooftop Solar)', 'Tốc độ dốc tải dP/dt (MW/h)'],
+        data: ['Phụ tải MBA 224 (Duck Curve)', 'Xuất tuyến 478', 'Tốc độ dốc tải dP/dt (MW/h)'],
         top: 6,
         textStyle: { color: '#334155', fontSize: 11, fontFamily: 'Inter' }
       },
@@ -307,7 +307,7 @@ const ChartManager = {
           }
         },
         {
-          name: 'Xuất tuyến 478 (Rooftop Solar)',
+          name: 'Xuất tuyến 478',
           type: 'line',
           smooth: true,
           data: duckData.feeders.P_478_solar,

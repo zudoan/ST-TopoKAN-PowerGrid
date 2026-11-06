@@ -40,38 +40,38 @@ class Settings:
         "P_474 Tân Hưng": {
             "code": "MC-474",
             "name": "Xuất tuyến 474 Tân Hưng",
-            "category": "Phụ tải Công nghiệp - KCN",
+            "category": "",
             "rated_current_a": 630.0,
             "max_mw": 24.0,
             "color": "#00f2fe",
-            "description": "Cung cấp cho các xí nghiệp, cơ sở sản xuất công nghiệp và chế biến"
+            "description": "Xuất tuyến 474 - 22kV"
         },
         "P_476 Tân Hưng": {
             "code": "MC-476",
             "name": "Xuất tuyến 476 Tân Hưng",
-            "category": "Phụ tải Sinh hoạt Đô thị",
+            "category": "",
             "rated_current_a": 630.0,
             "max_mw": 20.0,
             "color": "#38bdf8",
-            "description": "Khu dân cư trung tâm, bệnh viện, trường học và chiếu sáng công cộng"
+            "description": "Xuất tuyến 476 - 22kV"
         },
         "P_478 Tân Hưng": {
             "code": "MC-478",
             "name": "Xuất tuyến 478 Tân Hưng",
-            "category": "Điện mặt trời mái nhà (Rooftop Solar)",
+            "category": "",
             "rated_current_a": 630.0,
             "max_mw": 20.0,
             "color": "#f59e0b",
-            "description": "Khu vực mật độ áp mái cao; đặc trưng phát ngược giữa trưa (Duck Curve)"
+            "description": "Xuất tuyến 478 - 22kV"
         },
         "P_480 Tân Hưng": {
             "code": "MC-480",
             "name": "Xuất tuyến 480 Tân Hưng",
-            "category": "Nông nghiệp & Tưới tiêu",
+            "category": "",
             "rated_current_a": 630.0,
             "max_mw": 24.0,
             "color": "#10b981",
-            "description": "Bơm tưới tiêu nông nghiệp, trang trại chăn nuôi và phụ tải ngoại ô"
+            "description": "Xuất tuyến 480 - 22kV"
         }
     })
     

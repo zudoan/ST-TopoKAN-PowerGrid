@@ -22,10 +22,10 @@ class TopologyService:
             {"id": "bus_22kv", "type": "busbar", "label": "Thanh cái 22kV (C21-Tân Hưng)", "x": 580, "y": 60, "voltage_kv": 22.0, "status": "ENERGIZED"},
             
             # 4 Feeders
-            {"id": "feeder_474", "type": "feeder", "code": "MC-474", "label": "Xuất tuyến 474", "target": "KCN & Công nghiệp", "x": 750, "y": 20, "color": "#00f2fe", "max_mw": 24.0},
-            {"id": "feeder_476", "type": "feeder", "code": "MC-476", "label": "Xuất tuyến 476", "target": "Sinh hoạt Đô thị", "x": 750, "y": 80, "color": "#38bdf8", "max_mw": 20.0},
-            {"id": "feeder_478", "type": "feeder", "code": "MC-478", "label": "Xuất tuyến 478", "target": "Điện mặt trời mái nhà", "x": 750, "y": 140, "color": "#f59e0b", "max_mw": 20.0},
-            {"id": "feeder_480", "type": "feeder", "code": "MC-480", "label": "Xuất tuyến 480", "target": "Nông nghiệp & Bơm tưới", "x": 750, "y": 200, "color": "#10b981", "max_mw": 24.0}
+            {"id": "feeder_474", "type": "feeder", "code": "MC-474", "label": "Xuất tuyến 474", "target": "Xuất tuyến 474", "x": 750, "y": 20, "color": "#00f2fe", "max_mw": 24.0},
+            {"id": "feeder_476", "type": "feeder", "code": "MC-476", "label": "Xuất tuyến 476", "target": "Xuất tuyến 476", "x": 750, "y": 80, "color": "#38bdf8", "max_mw": 20.0},
+            {"id": "feeder_478", "type": "feeder", "code": "MC-478", "label": "Xuất tuyến 478", "target": "Xuất tuyến 478", "x": 750, "y": 140, "color": "#f59e0b", "max_mw": 20.0},
+            {"id": "feeder_480", "type": "feeder", "code": "MC-480", "label": "Xuất tuyến 480", "target": "Xuất tuyến 480", "x": 750, "y": 200, "color": "#10b981", "max_mw": 24.0}
         ]
 
         edges = [
