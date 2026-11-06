@@ -1,0 +1,155 @@
+/* National Power Grid & SCADA Dispatch Portal Style (EVN Standard - Spacious & Clean) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  --evn-primary: #003b7a;      /* EVN Deep Corporate Navy Blue */
+  --evn-blue: #005baa;         /* EVN Accent Royal Blue */
+  --evn-red: #d32f2f;          /* National Power / High Voltage Red */
+  --bg-main: #f8fafc;          /* Clean Off-White Background */
+  --bg-card: #ffffff;
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Institutional Header Bar */
+.evn-header {
+  background-color: var(--evn-primary);
+  color: #ffffff;
+  border-bottom: 3px solid var(--evn-red);
+}
+
+/* Engineering White Cards - Generous Padding & Crisp Spacing */
+.evn-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+}
+
+.evn-card-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+}
+
+.evn-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--evn-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-left: 3px solid var(--evn-blue);
+  padding-left: 10px;
+  margin: 0;
+}
+
+/* Minimalist Industrial Slider */
+input[type=range].scada-slider {
+  -webkit-appearance: none;
+  background: #cbd5e1;
+  height: 6px;
+  border-radius: 3px;
+  outline: none;
+}
+
+input[type=range].scada-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  background: var(--evn-primary);
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+input[type=range].scada-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: var(--evn-blue);
+}
+
+/* Spacious Navigation Tabs */
+.evn-tab-btn {
+  padding: 14px 22px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  border-bottom: 3px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.evn-tab-btn:hover {
+  color: var(--evn-primary);
+  background-color: #f8fafc;
+}
+
+.evn-tab-btn.active {
+  color: var(--evn-primary);
+  border-bottom: 3px solid var(--evn-red);
+  background-color: #ffffff;
+  font-weight: 700;
+}
+
+/* Operational Badges */
+.badge-peak {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+.badge-normal {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+}
+
+.badge-offpeak {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+}
+
+/* SLD Canvas */
+#sldCanvas {
+  background-color: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+}
+
+/* Scientific Diagram Container */
+.figure-container {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.figure-caption {
+  font-size: 12px;
+  color: #475569;
+  text-align: center;
+  margin-top: 10px;
+  font-style: italic;
+  font-weight: 500;
+}

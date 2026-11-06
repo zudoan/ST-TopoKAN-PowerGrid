@@ -1,0 +1,15 @@
+KẾT QUẢ ĐỐI CHIẾU DỮ LIỆU
+
+1. Bộ dữ liệu đã chia
+Tổng số dòng: 103,344. Train: 82,675; validation: 10,334; test: 10,335. Tỷ lệ 80/10/10 sau làm tròn, phù hợp số lượng và mốc thời gian ghi trong metadata và báo cáo.
+Không có ô thiếu: True. Không trùng mốc thời gian: True. Toàn bộ chuỗi liên tục mỗi 30 phút: True.
+P_224 bằng tổng bốn cột công suất nhánh: True; sai số tuyệt đối lớn nhất 7.11e-15.
+Bốn cột thời tiết khớp nguồn thời tiết khi làm tròn TIME xuống giờ, đúng phép ghép trong bước tiền xử lý thứ ba: True.
+
+2. Khả năng tái tạo từ dữ liệu gốc
+Đã giải nén và kiểm kê 67 tệp CSV, tổng 669,932 dòng. Có 16,463 dòng TIME chỉ chứa giờ/phút trong 2 tệp; ví dụ 00:00.0. Danh sách chi tiết nằm trong kiem_tra_TIME_du_lieu_goc.csv.
+Khi chạy lại phần quy trình đầy đủ thứ hai trong Xu_ly_01 (từ cell 27, vì tệp chứa hai khối quy trình lặp), chỉ đổi đường dẫn đầu vào sang thư mục đã giải nén, lệnh pd.to_datetime dừng ở cell 30 do TIME không đủ ngày tháng. Không tự gán ngày hoặc xóa dòng để vượt qua lỗi. Các bước tiếp theo chưa được chạy lại từ nguồn này.
+Vì vậy, có thể xác nhận bộ train/val/test phù hợp về cấu trúc, phép cộng công suất và ghép thời tiết; CHƯA thể xác nhận toàn bộ giá trị công suất được tái tạo đúng từ tệp RAR bằng nguyên trạng ba tệp tiền xử lý. Cần khôi phục ngày tháng bị thiếu hoặc xác minh quy tắc suy ra ngày theo từng tệp trước khi đối chiếu đầu-cuối.
+
+3. Phạm vi bàn giao
+Báo cáo, bài trình chiếu, mã nguồn và dữ liệu được giữ nguyên nội dung. Không chạy lại huấn luyện; kết quả mô hình trong tài liệu chưa được kiểm chứng bằng một lần huấn luyện mới. Tên tệp được rút gọn, ánh xạ với tệp tải lên ghi trong DANH_MUC_FILE.csv.

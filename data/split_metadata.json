@@ -1,0 +1,23 @@
+{
+  "source_file": "TanHung_P224_6Years_With_Weather.csv",
+  "total_records": 103344,
+  "split_ratio": "8:1:1",
+  "train": {
+    "records": 82675,
+    "percentage": "80.0%",
+    "time_range": "2020-02-09 00:00:00 to 2024-10-27 09:00:00",
+    "file": "data\\train.csv"
+  },
+  "val": {
+    "records": 10334,
+    "percentage": "10.0%",
+    "time_range": "2024-10-27 09:30:00 to 2025-05-30 16:00:00",
+    "file": "data\\val.csv"
+  },
+  "test": {
+    "records": 10335,
+    "percentage": "10.0%",
+    "time_range": "2025-05-30 16:30:00 to 2025-12-31 23:30:00",
+    "file": "data\\test.csv"
+  }
+}

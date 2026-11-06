@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CỔNG ĐIỀU ĐỘ SCADA & DỰ BÁO MBA 224 TÂN HƯNG | ST-TopoKAN</title>
+  
+  <!-- Tailwind CSS & Apache ECharts CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  
+  <!-- National Power Grid & SCADA Theme Styles -->
+  <link rel="stylesheet" href="/static/css/custom.css">
+</head>
+<body class="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between">
+
+  <!-- ==================== CLEAN TOP NAVIGATION HEADER ==================== -->
+  <header class="evn-header sticky top-0 z-50 shadow-sm">
+    <div class="max-w-[1600px] mx-auto px-6 py-3.5 flex items-center justify-between">
+      
+      <!-- Logo & Substation Identifier (Clean, Uncluttered) -->
+      <div class="flex items-center space-x-3.5">
+        <span class="px-3 py-1 bg-[#d32f2f] text-white font-bold text-xs rounded-sm tracking-widest shadow-sm">EVN</span>
+        <div class="border-l border-blue-400/30 pl-3.5">
+          <h1 id="substationTitle" class="text-base md:text-lg font-bold tracking-wide text-white uppercase m-0 leading-tight">
+            TRẠM BIẾN ÁP 110/22kV TÂN HƯNG - MBA T2 (224)
+          </h1>
+          <p class="text-xs text-blue-200 mt-0.5">
+            Hệ thống Điều độ Giám sát SCADA & Dự báo Phụ tải ST-TopoKAN • <span id="totalRecordsBadge" class="font-mono text-amber-300">10.335 bản ghi</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Dispatch Status (Clean & Minimal) -->
+      <div class="flex items-center space-x-4">
+        <div class="hidden sm:flex flex-col text-right font-mono">
+          <span class="text-[11px] text-blue-200">Thời điểm dữ liệu:</span>
+          <span id="currentTimestamp" class="text-xs font-bold text-white">2025-06-01 12:00:00</span>
+        </div>
+        <div class="flex items-center space-x-2 px-3 py-1.5 rounded bg-emerald-600/30 border border-emerald-400/40 text-emerald-300 text-xs font-bold font-mono">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>SCADA ONLINE</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MAIN NAVIGATION TABS (SPACIOUS & CLEAN) -->
+    <div class="bg-white border-b border-slate-200">
+      <div class="max-w-[1600px] mx-auto px-6 flex items-center space-x-2 overflow-x-auto">
+        <button type="button" data-tab="scada" class="tab-btn evn-tab-btn active">
+          1. Giám Sát SCADA & Sơ Đồ Đơn Tuyến
+        </button>
+        <button type="button" data-tab="forecast" class="tab-btn evn-tab-btn">
+          2. Dự Báo ST-TopoKAN Đa Bước (1P - 48P)
+        </button>
+        <button type="button" data-tab="duck-curve" class="tab-btn evn-tab-btn">
+          3. Hiện Tượng Duck Curve & Solar
+        </button>
+        <button type="button" data-tab="kan" class="tab-btn evn-tab-btn">
+          4. Kiến Trúc Mô Hình & KAN
+        </button>
+        <button type="button" data-tab="physics-audit" class="tab-btn evn-tab-btn">
+          5. Kiểm Toán Dữ Liệu & Vật Lý
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT CONTAINER (SPACIOUS VERTICAL FLOW) ==================== -->
+  <main class="max-w-[1600px] w-full mx-auto p-6 md:p-8 flex-1">
+
+    <!-- DISPATCH TIMELINE SCRUBBER DOCK -->
+    <div class="evn-card p-5 mb-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        
+        <!-- Controls Buttons -->
+        <div class="flex items-center space-x-2">
+          <button id="stepPrevBtn" class="px-3 py-1.5 rounded border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-mono font-medium transition-colors">
+            ◀ Lùi
+          </button>
+          
+          <button id="playPauseBtn" class="px-4 py-1.5 rounded text-xs font-semibold bg-[#003b7a] text-white hover:bg-[#002b59] transition-colors shadow-sm">
+            Phát lại SCADA
+          </button>
+
+          <button id="stepNextBtn" class="px-3 py-1.5 rounded border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-mono font-medium transition-colors">
+            Tiến ▶
+          </button>
+
+          <!-- Speed Toggles -->
+          <div class="hidden sm:flex items-center space-x-1.5 pl-3 border-l border-slate-200 text-xs font-mono">
+            <span class="text-slate-500 text-[11px] mr-1">Tốc độ:</span>
+            <button data-speed="2000" class="speed-btn px-2.5 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200">1x</button>
+            <button data-speed="1000" class="speed-btn px-2.5 py-1 rounded bg-[#003b7a] text-white">2x</button>
+            <button data-speed="300" class="speed-btn px-2.5 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200">5x</button>
+          </div>
+        </div>
+
+        <!-- Slider Bar with Date Markers -->
+        <div class="flex-1 w-full flex items-center space-x-4 px-2">
+          <span class="text-xs font-mono text-slate-500 whitespace-nowrap">30/05/2025</span>
+          <input type="range" id="timelineSlider" min="48" max="10285" value="100" class="scada-slider w-full cursor-pointer">
+          <span class="text-xs font-mono text-slate-500 whitespace-nowrap">31/12/2025</span>
+        </div>
+
+        <!-- Position Display -->
+        <div class="text-right whitespace-nowrap">
+          <div class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Thời điểm Replay</div>
+          <div id="sliderTimeDisplay" class="text-sm font-mono font-bold text-[#003b7a]">2025-06-01 12:00</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== TAB 1: SCADA MONITORING & SLD ==================== -->
+    <section id="tab-scada" class="tab-content space-y-8">
+      
+      <!-- Substation Core Telemetry Metrics -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- P_224 Active Power -->
+        <div class="evn-card p-5 border-t-4 border-t-[#003b7a]">
+          <div class="text-xs font-bold tracking-wider text-slate-500 uppercase">CÔNG SUẤT TÁC DỤNG P_224</div>
+          <div class="flex items-baseline justify-between mt-2">
+            <h3 class="text-3xl font-bold font-mono text-[#003b7a] tracking-tight">
+              <span id="valP224">20.24</span> <span class="text-sm font-normal text-slate-500">MW</span>
+            </h3>
+            <span class="text-xs font-mono font-semibold text-[#003b7a] bg-blue-50 px-2 py-0.5 rounded border border-blue-200">Định mức 63 MVA</span>
+          </div>
+          <div class="flex items-center justify-between text-xs font-mono text-slate-600 border-t border-slate-100 pt-3 mt-3">
+            <span>Công suất biểu kiến S:</span>
+            <span id="valSMVA" class="text-slate-900 font-bold">21.53 MVA</span>
+          </div>
+        </div>
+
+        <!-- Reactive Power & Current -->
+        <div class="evn-card p-5 border-t-4 border-t-[#005baa]">
+          <div class="text-xs font-bold tracking-wider text-slate-500 uppercase">CÔNG SUẤT PHẢN KHÁNG Q</div>
+          <div class="flex items-baseline justify-between mt-2">
+            <h3 class="text-3xl font-bold font-mono text-slate-900 tracking-tight">
+              <span id="valQMVAR">7.36</span> <span class="text-xs font-normal text-slate-500">MVAr</span>
+            </h3>
+            <span class="text-xs font-mono text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded">cos φ = 0.94</span>
+          </div>
+          <div class="flex items-center justify-between text-xs font-mono text-slate-600 border-t border-slate-100 pt-3 mt-3">
+            <span>Dòng tải thứ cấp (22kV):</span>
+            <span id="valCurrent22kv" class="text-slate-900 font-bold">545.2 A</span>
+          </div>
+        </div>
+
+        <!-- Load Factor % -->
+        <div class="evn-card p-5 border-t-4 border-t-[#15803d]">
+          <div class="text-xs font-bold tracking-wider text-slate-500 uppercase">HỆ SỐ MANG TẢI MBA T2</div>
+          <div class="flex items-baseline justify-between mt-2">
+            <h3 class="text-3xl font-bold font-mono text-[#15803d] tracking-tight">
+              <span id="valLoadFactor">34.2%</span>
+            </h3>
+            <span class="text-xs font-mono text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200 font-medium">Bình thường</span>
+          </div>
+          <div class="w-full bg-slate-200 rounded h-2 mt-4 overflow-hidden">
+            <div id="loadFactorBar" class="bg-[#15803d] h-2 rounded transition-all duration-300" style="width: 34.2%"></div>
+          </div>
+        </div>
+
+        <!-- Weather Readings -->
+        <div class="evn-card p-5 border-t-4 border-t-[#d32f2f]">
+          <div class="flex items-center justify-between">
+            <div class="text-xs font-bold tracking-wider text-slate-500 uppercase">THỜI TIẾT TẠI TRẠM</div>
+            <div id="tariffBadge" class="badge-normal px-2 py-0.5 rounded text-[11px] font-semibold">
+              Bình thường
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2.5 mt-3 text-xs font-mono">
+            <div class="bg-slate-50 p-2 rounded border border-slate-200">
+              <span class="text-slate-500 text-[10px]">Nhiệt độ:</span>
+              <div id="weatherTemp" class="text-slate-900 font-bold text-sm">31.5°C</div>
+            </div>
+            <div class="bg-slate-50 p-2 rounded border border-slate-200">
+              <span class="text-slate-500 text-[10px]">Độ ẩm:</span>
+              <div id="weatherHum" class="text-slate-900 font-bold text-sm">68%</div>
+            </div>
+            <div class="bg-slate-50 p-2 rounded border border-slate-200">
+              <span class="text-slate-500 text-[10px]">Tốc độ gió:</span>
+              <div id="weatherWind" class="text-slate-900 font-bold text-sm">11.2 km/h</div>
+            </div>
+            <div class="bg-slate-50 p-2 rounded border border-slate-200">
+              <span class="text-slate-500 text-[10px]">Lượng mưa:</span>
+              <div id="weatherPrecip" class="text-slate-900 font-bold text-sm">0.0 mm</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Power Conservation Bar -->
+      <div class="evn-card p-4 flex flex-wrap items-center justify-between gap-3 bg-slate-50">
+        <div class="flex items-center space-x-3 text-xs">
+          <span class="font-bold text-[#003b7a] uppercase tracking-wide">Kiểm toán bảo toàn Kirchhoff tại thanh cái:</span>
+          <span class="font-mono text-slate-700 font-semibold bg-white px-2.5 py-1 rounded border border-slate-200">P_224 = P_474 + P_476 + P_478 + P_480</span>
+        </div>
+        <div id="conservationBadge" class="px-3 py-1 rounded text-xs font-mono font-bold bg-emerald-50 text-emerald-800 border border-emerald-300">
+          CÂN BẰNG NĂNG LƯỢNG (ΔP ≈ 0)
+        </div>
+      </div>
+
+      <!-- Single Line Diagram (SLD) -->
+      <div class="evn-card">
+        <div class="evn-card-header">
+          <div class="evn-card-title">Sơ Đồ Đơn Tuyến Trạm Biến Áp (Single Line Diagram - IEC 61850)</div>
+          <div class="flex items-center space-x-5 text-xs font-mono text-slate-600">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#d32f2f]"></span> Tuyến 110kV</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#005baa]"></span> Thanh cái 22kV</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#15803d]"></span> Máy cắt đóng</span>
+          </div>
+        </div>
+        <div class="p-6 overflow-x-auto">
+          <canvas id="sldCanvas" class="w-full"></canvas>
+        </div>
+      </div>
+
+      <!-- 4 Feeders Live Cards Grid -->
+      <div>
+        <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">TÌNH TRẠNG 4 XUẤT TUYẾN HẠ LƯU 22kV</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="feedersContainer">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- SCADA Trend Chart -->
+      <div class="evn-card">
+        <div class="evn-card-header">
+          <div class="evn-card-title">Đồ Thị Công Suất SCADA Phân Tuyến (Chu kỳ 30 Phút)</div>
+          <span class="text-xs font-mono text-slate-600 bg-slate-100 px-2.5 py-1 rounded border border-slate-200">Cửa sổ 48 bước (24h)</span>
+        </div>
+        <div class="p-6">
+          <div id="telemetryChart" class="w-full h-80"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== TAB 2: ST-TopoKAN MULTI-HORIZON FORECAST ==================== -->
+    <section id="tab-forecast" class="tab-content hidden space-y-8">
+      
+      <!-- Horizon Selector Toolbar -->
+      <div class="evn-card p-5">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div>
+            <div class="evn-card-title">Khoảng Dự Báo (Multi-Horizon Selection)</div>
+            <p class="text-xs text-slate-500 mt-1">Chọn khoảng thời gian dự báo tương lai: từ 30 phút (1P) đến 24 giờ (48P)</p>
+          </div>
+
+          <div class="flex items-center flex-wrap gap-2.5">
+            <button data-horizon="1" class="horizon-btn px-3.5 py-2 rounded text-xs font-mono font-medium border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition-colors">
+              1P (30 phút)
+            </button>
+            <button data-horizon="2" class="horizon-btn px-3.5 py-2 rounded text-xs font-mono font-medium border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition-colors">
+              2P (1 giờ)
+            </button>
+            <button data-horizon="6" class="horizon-btn px-3.5 py-2 rounded text-xs font-mono font-medium border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition-colors">
+              6P (3 giờ)
+            </button>
+            <button data-horizon="12" class="horizon-btn px-3.5 py-2 rounded text-xs font-mono font-medium border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition-colors">
+              12P (6 giờ)
+            </button>
+            <button data-horizon="24" class="horizon-btn px-3.5 py-2 rounded text-xs font-mono font-medium border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition-colors">
+              24P (12 giờ)
+            </button>
+            <button data-horizon="48" class="horizon-btn px-3.5 py-2 rounded text-xs font-mono font-bold bg-[#003b7a] text-white border-[#003b7a] transition-colors shadow-sm">
+              48P (24 giờ)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Window Forecast KPI Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div class="evn-card p-4 border-l-4 border-l-[#003b7a]">
+          <div class="text-[11px] text-slate-500 font-bold uppercase">WAPE CỬA SỔ</div>
+          <div id="valWape" class="text-2xl font-bold font-mono text-[#003b7a] mt-1">13.86%</div>
+          <div id="valBenchWape" class="text-[11px] text-slate-500 font-mono mt-1">Kỳ vọng test: 13.86%</div>
+        </div>
+
+        <div class="evn-card p-4 border-l-4 border-l-[#005baa]">
+          <div class="text-[11px] text-slate-500 font-bold uppercase">MAE</div>
+          <div id="valMae" class="text-2xl font-bold font-mono text-slate-900 mt-1">2.804 MW</div>
+          <div id="valBenchMae" class="text-[11px] text-slate-500 font-mono mt-1">Test: 2.804 MW</div>
+        </div>
+
+        <div class="evn-card p-4 border-l-4 border-l-[#d32f2f]">
+          <div class="text-[11px] text-slate-500 font-bold uppercase">RMSE</div>
+          <div id="valRmse" class="text-2xl font-bold font-mono text-[#d32f2f] mt-1">3.797 MW</div>
+          <div id="valBenchRmse" class="text-[11px] text-slate-500 font-mono mt-1">Test: 3.797 MW</div>
+        </div>
+
+        <div class="evn-card p-4 border-l-4 border-l-[#15803d]">
+          <div class="text-[11px] text-slate-500 font-bold uppercase">HỆ SỐ R²</div>
+          <div id="valR2" class="text-2xl font-bold font-mono text-[#15803d] mt-1">0.8013</div>
+          <div id="valBenchR2" class="text-[11px] text-slate-500 font-mono mt-1">Test: 0.8013</div>
+        </div>
+
+        <div class="evn-card p-4 border-l-4 border-l-amber-600">
+          <div class="text-[11px] text-slate-500 font-bold uppercase">THAM SỐ KAN</div>
+          <div id="valParams" class="text-2xl font-bold font-mono text-slate-900 mt-1">403.6K</div>
+          <div id="forecastModelName" class="text-[11px] text-slate-500 font-mono mt-1 truncate">Topo_KAN_Standard</div>
+        </div>
+
+        <div class="evn-card p-4 border-l-4 border-l-slate-700">
+          <div class="text-[11px] text-slate-500 font-bold uppercase">ĐỘ TRỄ SUY LUẬN</div>
+          <div id="valLatency" class="text-2xl font-bold font-mono text-slate-900 mt-1">0.130 ms</div>
+          <div class="text-[11px] text-slate-500 font-mono mt-1">Thời gian thực</div>
+        </div>
+      </div>
+
+      <!-- Forecast Chart -->
+      <div class="evn-card">
+        <div class="evn-card-header">
+          <div class="evn-card-title">
+            <span id="forecastHorizonBadge" class="text-[#003b7a] font-mono">48P (24 giờ)</span>
+            - Đồ Thị Dự Báo ST-TopoKAN So Sánh Thực Tế & Khoảng Tin Cậy 95%
+          </div>
+        </div>
+        <div class="p-6">
+          <div id="forecastChart" class="w-full h-96"></div>
+        </div>
+      </div>
+
+      <!-- Benchmark Matrix + Real Research Image Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Official Benchmark Table (2 cols) -->
+        <div class="evn-card lg:col-span-2">
+          <div class="evn-card-header">
+            <div class="evn-card-title">Bảng Đối Chiếu Hiệu Năng 6 Khoảng Dự Báo (Official Benchmark)</div>
+          </div>
+          <div class="p-5 overflow-x-auto">
+            <table class="w-full text-xs text-left">
+              <thead>
+                <tr class="border-b border-slate-200 bg-slate-50 text-slate-700 font-mono font-bold">
+                  <th class="py-3 px-3">KHOẢNG DỰ BÁO</th>
+                  <th class="py-3 px-3">MÔ HÌNH</th>
+                  <th class="py-3 px-3">WAPE (%)</th>
+                  <th class="py-3 px-3">MAE (MW)</th>
+                  <th class="py-3 px-3">RMSE (MW)</th>
+                  <th class="py-3 px-3">R² SCORE</th>
+                  <th class="py-3 px-3">THAM SỐ</th>
+                  <th class="py-3 px-3">ĐỘ TRỄ</th>
+                </tr>
+              </thead>
+              <tbody id="benchmarkTableBody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Embedded Real Figure 7 from Report -->
+        <div class="evn-card p-5 flex flex-col justify-between">
+          <div class="evn-card-title mb-3">Biểu Đồ WAPE 6 Khoảng Dự Báo</div>
+          <div class="figure-container flex-1 flex flex-col items-center justify-center">
+            <img src="/static/assets/hinh7_wape_horizons.png" alt="Hình 7: Biến thiên WAPE theo sáu khoảng dự báo" class="max-h-60 object-contain rounded">
+            <div class="figure-caption">Hình 7: Biến thiên WAPE theo 6 khoảng dự báo (Trích Báo cáo đề tài).</div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ==================== TAB 3: DUCK CURVE & SOLAR ANALYSIS ==================== -->
+    <section id="tab-duck-curve" class="tab-content hidden space-y-8">
+      
+      <!-- Highlights Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="evn-card p-5 border-l-4 border-l-amber-500">
+          <div class="text-xs text-slate-500 font-mono uppercase font-bold">VÙNG BỤNG VỊT (SOLAR DIP)</div>
+          <div id="solarDipText" class="text-base font-bold text-amber-700 mt-1.5">11:00 - 13:00</div>
+          <p class="text-xs text-slate-600 mt-1">Điện mặt trời mái nhà phát tối đa, phụ tải nhận từ lưới 110kV chạm đáy</p>
+        </div>
+
+        <div class="evn-card p-5 border-l-4 border-l-[#d32f2f]">
+          <div class="text-xs text-slate-500 font-mono uppercase font-bold">VÙNG CỔ VỊT (EVENING PEAK)</div>
+          <div id="eveningPeakText" class="text-base font-bold text-[#d32f2f] mt-1.5">18:00 - 20:00</div>
+          <p class="text-xs text-slate-600 mt-1">Nắng tắt đột ngột trùng giờ sinh hoạt cao điểm, công suất trạm tăng vọt</p>
+        </div>
+
+        <div class="evn-card p-5 border-l-4 border-l-[#003b7a]">
+          <div class="text-xs text-slate-500 font-mono uppercase font-bold">TỐC ĐỘ DỐC TẢI TỐI ĐA (dP/dt)</div>
+          <div id="maxRampSpeed" class="text-base font-bold text-[#003b7a] font-mono mt-1.5">+12.4 MW/h (17h - 18h)</div>
+          <p class="text-xs text-slate-600 mt-1">Thách thức điều độ: mô hình KAN phải dự báo chính xác độ dốc dP/dt</p>
+        </div>
+      </div>
+
+      <!-- Live Duck Curve Chart -->
+      <div class="evn-card">
+        <div class="evn-card-header">
+          <div class="evn-card-title">Đồ Thị Phụ Tải Trung Bình 24 Giờ & Hiện Tượng Duck Curve Tân Hưng</div>
+          <span class="text-xs font-mono text-amber-800 bg-amber-50 px-3 py-1 rounded border border-amber-200 font-medium">Khu vực Tây Ninh - Solar cao</span>
+        </div>
+        <div class="p-6">
+          <div id="duckCurveChart" class="w-full h-96"></div>
+        </div>
+      </div>
+
+      <!-- Two Embedded Research Visuals: Figure 3 & Slide Detail -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Figure 3 from Word Report -->
+        <div class="evn-card p-5">
+          <div class="evn-card-title mb-3">Hồ Sơ Phụ Tải Dạng Duck Curve Tại Trạm Tân Hưng</div>
+          <div class="figure-container">
+            <img src="/static/assets/hinh3_duck_curve.png" alt="Hình 3: Hồ sơ phụ tải trung bình theo giờ dạng Duck Curve" class="w-full h-64 object-contain rounded">
+            <div class="figure-caption">Hình 3: Hồ sơ phụ tải trung bình theo giờ và đặc điểm dạng Duck Curve tại MBA 224 Tân Hưng (Báo cáo đề tài).</div>
+          </div>
+        </div>
+
+        <!-- Slide Presentation Detail -->
+        <div class="evn-card p-5">
+          <div class="evn-card-title mb-3">Đặc Tính Kỹ Thuật Hiện Tượng Duck Curve & Thâm Nhập Solar</div>
+          <div class="figure-container">
+            <img src="/static/assets/slide_duckcurve_detail.png" alt="Slide phân tích Duck Curve" class="w-full h-64 object-contain rounded">
+            <div class="figure-caption">Trích Slide Thuyết Trình: Phân tích ảnh hưởng của điện mặt trời áp mái đến vận hành MBA 224.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Engineering Commentary -->
+      <div class="evn-card p-5 bg-slate-50 border border-slate-200">
+        <div class="text-xs font-bold text-[#003b7a] uppercase tracking-wider mb-1.5">
+          Nhận Định Khoa Học Về Hiện Tượng Duck Curve Tại Trạm Tân Hưng
+        </div>
+        <p id="duckAnalysisText" class="text-xs text-slate-700 leading-relaxed m-0">
+          Đang tải nhận định khoa học...
+        </p>
+      </div>
+
+    </section>
+
+    <!-- ==================== TAB 4: KAN B-SPLINES & ARCHITECTURE ==================== -->
+    <section id="tab-kan" class="tab-content hidden space-y-8">
+      
+      <!-- Full-Width Embedded Architecture Diagram (Hinh 6 from Report) -->
+      <div class="evn-card">
+        <div class="evn-card-header">
+          <div class="evn-card-title">Sơ Đồ Kiến Trúc Tổng Thể Mô Hình ST-TopoKAN</div>
+          <span class="text-xs font-mono text-slate-600 bg-slate-100 px-3 py-1 rounded">Hình 6 - Báo cáo đề tài</span>
+        </div>
+        <div class="p-6 figure-container">
+          <img src="/static/assets/hinh6_kientruc_st_topokan.png" alt="Hình 6: Kiến trúc ST-TopoKAN" class="w-full max-h-[480px] object-contain mx-auto rounded">
+          <div class="figure-caption">Hình 6: Kiến trúc ST-TopoKAN gồm nhánh tải trễ, GRU, bộ mã hóa tô-pô thưa, khối KAN và cổng điều tiết đầu ra.</div>
+        </div>
+      </div>
+
+      <!-- Interactive KAN B-Spline Inspector -->
+      <div class="evn-card p-5">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-3">
+          <div>
+            <div class="evn-card-title">Khảo Sát Toán Học Hàm Kích Hoạt KAN B-Splines (Cubic B-Splines)</div>
+            <p class="text-xs text-slate-500 mt-1">Công thức Cox-de Boor: φ(x) = w_b · GELU(x) + ∑ c_k · B_k(x) trên miền [-2, 2]</p>
+          </div>
+
+          <!-- Grid Size Slider -->
+          <div class="flex items-center space-x-3 text-xs font-mono">
+            <span class="text-slate-600 font-medium">Độ phân giải lưới (G):</span>
+            <input type="range" id="kanGridSlider" min="3" max="10" value="5" class="scada-slider w-32 cursor-pointer">
+            <span id="kanGridVal" class="text-[#003b7a] font-bold px-2 py-0.5 rounded bg-slate-100 border border-slate-300">5</span>
+          </div>
+        </div>
+
+        <div id="kanSplineChart" class="w-full h-80"></div>
+      </div>
+
+      <!-- Heatmap & KAN vs MLP -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Learned Topology Matrix -->
+        <div class="evn-card p-5">
+          <div class="evn-card-header mb-2">
+            <div class="evn-card-title">Ma Trận Kề Tô-Pô Tự Học (Learned Sparse Graph)</div>
+            <span id="topoSparsityBadge" class="text-[11px] font-mono text-slate-700 bg-slate-100 px-2.5 py-1 rounded border border-slate-200">Top-4 Sparsity</span>
+          </div>
+          <div class="p-2">
+            <div id="topologyHeatmap" class="w-full h-80"></div>
+          </div>
+        </div>
+
+        <!-- Comparison Cards -->
+        <div class="evn-card p-5">
+          <div class="evn-card-title mb-3">Ưu Điểm Của Mạng KAN So Với MLP Truyền Thống</div>
+          <div class="space-y-3 text-xs">
+            <div class="p-3.5 rounded bg-slate-50 border border-slate-200">
+              <div class="font-bold text-[#003b7a] mb-1">1. Vị trí hàm kích hoạt phi tuyến</div>
+              <p class="text-slate-600 text-[11px] m-0"><strong class="text-slate-800">MLP:</strong> Hàm cố định tại nút (ReLU, GELU). <strong class="text-[#005baa]">KAN:</strong> Đặt trực tiếp hàm B-spline có thể học trên các cạnh (Edges), thích nghi chính xác với các đường cong phi tuyến phức tạp.</p>
+            </div>
+
+            <div class="p-3.5 rounded bg-slate-50 border border-slate-200">
+              <div class="font-bold text-[#003b7a] mb-1">2. Cơ chế Đa tỷ lệ (Multi-Scale KAN)</div>
+              <p class="text-slate-600 text-[11px] m-0"><strong class="text-slate-800">MLP:</strong> Độ phân giải tĩnh trên toàn miền. <strong class="text-[#005baa]">KAN:</strong> Kết hợp lưới thô (G=5) và lưới mịn (G=10) giúp nắm bắt đồng thời xu hướng nền và dao động dốc tải tức thời.</p>
+            </div>
+
+            <div class="p-3.5 rounded bg-slate-50 border border-slate-200">
+              <div class="font-bold text-[#003b7a] mb-1">3. Hiệu quả tham số & Tốc độ suy luận</div>
+              <p class="text-slate-600 text-[11px] m-0"><strong class="text-slate-800">Mô hình truyền thống:</strong> Thường cần số lượng tham số lớn. <strong class="text-[#005baa]">ST-TopoKAN:</strong> Chỉ cần ~332K - 403K tham số, thời gian suy luận thực tế đạt 0.06 - 0.13 ms/mẫu.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ==================== TAB 5: DATA AUDIT & CORRELATION ==================== -->
+    <section id="tab-physics-audit" class="tab-content hidden space-y-8">
+      
+      <!-- Embedded Research Figures: Dataset Split & Pearson Correlation -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Figure 1: Split Timeline -->
+        <div class="evn-card p-5">
+          <div class="evn-card-title mb-3">Phân Chia Chuỗi Thời Gian 80/10/10 (Train / Val / Test)</div>
+          <div class="figure-container">
+            <img src="/static/assets/hinh1_chuoicongsuat_split.png" alt="Hình 1: Phân chia chuỗi thời gian" class="w-full h-64 object-contain rounded">
+            <div class="figure-caption">Hình 1: Diễn biến công suất trung bình ngày và phân chia dữ liệu theo thời gian (02/2020 - 12/2025).</div>
+          </div>
+        </div>
+
+        <!-- Figure 5: Pearson Correlation Matrix -->
+        <div class="evn-card p-5">
+          <div class="evn-card-title mb-3">Ma Trận Tương Quan Pearson Giữa Tải & Thời Tiết</div>
+          <div class="figure-container">
+            <img src="/static/assets/hinh5_tuongquan_pearson.png" alt="Hình 5: Ma trận tương quan Pearson" class="w-full h-64 object-contain rounded">
+            <div class="figure-caption">Hình 5: Ma trận tương quan Pearson giữa công suất và các biến thời tiết (Nhiệt độ tương quan âm -0.409).</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Overview Banner -->
+      <div class="evn-card p-5 bg-slate-50 border border-slate-200">
+        <div class="text-sm font-bold text-[#003b7a] mb-1">
+          Quy Trình Tiền Xử Lý 7 Tầng Tuân Thủ Bản Chất Vật Lý Điện Lực
+        </div>
+        <p class="text-xs text-slate-600 leading-relaxed m-0">
+          Dữ liệu đo SCADA từ 67 tệp CSV được chuẩn hóa thời gian và kiểm soát qua 7 quy tắc vật lý và thống kê, loại bỏ hiện tượng đấu ngược cực tính CT và bảo đảm bảo toàn công suất Kirchhoff P_224 = ∑ P_feeders.
+        </p>
+      </div>
+
+      <!-- 7 Stages Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="physicsAuditContainer">
+        <!-- Injected via JavaScript -->
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-600 font-mono mt-12">
+    <div class="max-w-[1600px] mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div>Đề tài Báo cáo Cuối kỳ: Dự Báo Phụ Tải Điện MBA 224 Tân Hưng Bằng Mô Hình ST-TopoKAN</div>
+      <div>Phân hiệu Trường Đại học Thủy Lợi • Bộ môn Trí tuệ Nhân tạo</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/scada_flow.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/kan_visualizer.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

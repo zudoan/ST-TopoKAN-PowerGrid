@@ -1,0 +1,48 @@
+{
+  "split": {
+    "train": {
+      "rows": 82675,
+      "start": "2020-02-09 00:00:00",
+      "end": "2024-10-27 09:00:00"
+    },
+    "val": {
+      "rows": 10334,
+      "start": "2024-10-27 09:30:00",
+      "end": "2025-05-30 16:00:00"
+    },
+    "test": {
+      "rows": 10335,
+      "start": "2025-05-30 16:30:00",
+      "end": "2025-12-31 23:30:00"
+    }
+  },
+  "total_rows": 103344,
+  "columns": [
+    "TIME",
+    "P_474 Tân Hưng",
+    "P_476 Tân Hưng",
+    "P_478 Tân Hưng",
+    "P_480 Tân Hưng",
+    "P_224",
+    "temp",
+    "rhum",
+    "prcp",
+    "wspd"
+  ],
+  "missing_cells": 0,
+  "duplicate_timestamps": 0,
+  "all_intervals_30min": true,
+  "p224_max_abs_sum_error": 7.105427357601002e-15,
+  "p224_sum_matches": true,
+  "weather_matches": {
+    "temp": true,
+    "rhum": true,
+    "prcp": true,
+    "wspd": true
+  },
+  "raw_csv_files": 67,
+  "raw_rows": 669932,
+  "raw_time_only_rows": 16463,
+  "raw_files_with_time_only": 2,
+  "full_reproduction": "blocked at Xu_ly_01 cell 30: TIME value 00:00.0 has no date"
+}
