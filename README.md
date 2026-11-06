@@ -2,6 +2,13 @@
 
 **Mạng Kolmogorov-Arnold Nhận thức Không gian - Thời gian Dự báo Phụ tải Điện Trạm Biến áp 110/22kV**
 
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?style=flat&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Grid Standard](https://img.shields.io/badge/Grid%20Standard-IEC%2061850-D32F2F?style=flat)](https://www.iec.ch/)
+[![License](https://img.shields.io/badge/License-MIT-2ea44f?style=flat)](LICENSE)
+[![Data Integrity](https://img.shields.io/badge/SHA--256-100%25%20Verified-003B7A?style=flat)](#8-xác-thực-toàn-vẹn-dữ-liệu-sha-256)
+
 Nghiên cứu ứng dụng tại Máy biến áp T2 (MBA 224 - 63 MVA) Trạm 110/22kV Tân Hưng (Tây Ninh). Tích hợp mạng Kolmogorov-Arnold đa thang (MS-KAN), mã hóa đồ thị thưa Top-K, cơ chế mỏ neo tự hồi quy tuyến tính (AR) chống dịch chuyển phân phối dữ liệu (Data Drift), và Nền tảng điều độ SCADA thời gian thực chuẩn EVN / NSMO.
 
 [Báo cáo khoa học](reports/BaoCao_ST_TopoKAN.docx) | [Slide thuyết trình](presentation/ST_TopoKAN.pptx) | [Mã nguồn thực nghiệm](notebooks/) | [Nền tảng SCADA Web](web_app/)
